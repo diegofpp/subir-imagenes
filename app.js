@@ -2,7 +2,7 @@ const dropArea = document.querySelector(".drop-area");
 const dragText = dropArea.querySelector("h2");
 const button = dropArea.querySelector("button");
 const input = dropArea.querySelector("#input-file");
-let files;
+var files;
 
 button.addEventListener("click", (e) => {
     input.click();
@@ -37,10 +37,11 @@ dropArea.addEventListener("drop", (e) => {
 
 
 function showFiles(files){
+    console.dir(files);
     if(files.length === undefined){
         processFile(files);
-    }else{
-        for(const file of files){
+    } else {
+        for (const file of files){
             processFile(file);
         }
     }
@@ -52,9 +53,36 @@ function processFile(file){
     const validExtensions = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
 
     if(validExtensions.includes(docType)){
-        
+        const fileReader = new FileReader();
+        const id = `file-${Math.random().toString(32).substring(7)}`; 
+
+        fileReader.addEventListener('load', e => {
+            const fileUrl = fileReader.result;
+            const image = `
+                <div id="${id}" class='file-container'>
+                    <img src="${fileUrl}" alt="${file.name}" width="50">
+                    <div class="status>
+                    <span>${file.name}</span>
+                    <span class="status-text">
+                        Loading...
+                    </span>
+                </div>    
+            </div>
+
+            `;
+            document.querySelector('#preview').innerHTML = image + html;
+        });
+
+        fileReader.readAsDataURL(file);
+        uploadFile(file, id);
     }else{
       alert("No es un archivo valido");  
     }
 }
 
+function uploadFile(file){
+
+}
+
+
+//para el codigo anterior, reescribelo y comenta con lo que hace cada linea
